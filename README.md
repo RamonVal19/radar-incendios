@@ -1,6 +1,7 @@
 # Radar de incendios forestales en Chile
 
-Proyecto Big Data IF1026-1. Integrantes: Matías Vera, Alan Caro, Ramón Valenzuela y Daniel Herrero.
+Proyecto Big Data
+Integrantes: Matías Vera, Alan Caro, Ramón Valenzuela y Daniel Herrero.
 
 ## Datos crudos (data/raw/)
 
