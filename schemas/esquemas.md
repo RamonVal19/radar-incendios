@@ -1,14 +1,16 @@
-# Contrato de datos (versión 3, 20-nov-2026)
+# Contrato de datos (versión 3.1, 22-nov-2026)
 
 Este archivo fija cómo se ven los datos entre una etapa y otra, para que cada integrante trabaje en paralelo con datos de muestra. Cualquier cambio se avisa al grupo antes de hacerlo.
 
 ## Roles
 | rol | responsable | produce |
 |---|---|---|
-| A | Ramón | `celdas`, `focos` |
-| B | Daniel | `clima_horario`, `clima_diario` |
-| C | Matías | `resultado`, `evaluacion_regla` |
-| D | Alan | Tablas Hive, índices de Elasticsearch y panel de Kibana |
+| A | Ramón | `celdas`, `focos`, coordinación y ejecución final |
+| B | Alan (descarga) y Daniel (`clima_diario.py`) | `clima_horario`, `clima_diario` |
+| C | Alan | `resultado`, `evaluacion_regla` |
+| D | Matías | Tablas Hive, índices de Elasticsearch, mapa en Kibana y README |
+
+El detalle de tareas y fechas de cada integrante está en el documento de tareas de la semana.
 
 ## Reglas comunes
 - **Zona de estudio:** Latitud entre -39,6 y -32,0, longitud entre -74,0 y -70,0 (centro-sur continental, sin Argentina ni islas).
@@ -20,14 +22,14 @@ Este archivo fija cómo se ven los datos entre una etapa y otra, para que cada i
 - **Formato:** CSV con encabezado, coma como separador y punto decimal en `data/sample/`. Parquet en HDFS.
 
 ## 1. celdas (rol A, se congela una vez)
-Lista fija de celdas que se usan en todo el proyecto. Se genera una sola vez desde los focos de las temporadas 2013-2024 y se sube a `data/sample/celdas.csv`. Rol B descarga el clima de estas celdas sin esperar a nadie.
+Lista fija de celdas que se usan en todo el proyecto. Se genera una sola vez desde los focos de las temporadas 2013-2024 y se sube a `data/celdas.csv` (no a `data/sample/`, que guarda la muestra de 5 celdas) y a `/clean/celdas/`. Rol B descarga el clima de estas celdas.
 
 | columna | tipo | descripción |
 |---|---|---|
 | celda_id | string | Celda de 0,25° |
 | lat_celda, lon_celda | double | Centro de la celda |
 | zona | int | Banda de latitud |
-| es_control | boolean | true si la celda nunca tuvo focos en el histórico (elegida al azar dentro de la zona de estudio, unas 30 celdas) |
+| es_control | boolean | true si la celda nunca tuvo focos en el histórico (elegida al azar dentro de la zona de estudio y en territorio chileno, unas 30 celdas) |
 
 ## 2. focos (rol A)
 Un registro por detección VIIRS S-NPP de vegetación (`type = 0`) dentro de la zona de estudio.
@@ -73,7 +75,7 @@ Un registro por celda y día.
 | horas_regla | int | Horas del día con temp > 30, hr < 30 y viento > 30 a la vez |
 | horas_regla_rafaga | int | Igual, pero con rafaga > 30 en vez de viento |
 
-**Plan B (si el horario no está completo el 25-nov):** Se baja el clima diario de Open-Meteo con las mismas columnas, y `horas_regla` y `horas_regla_rafaga` quedan en null. Nada más cambia aguas abajo.
+**Plan B (se decide el lunes 23-nov según la cuota de Open-Meteo):** Se baja el clima diario de Open-Meteo con las mismas columnas, y `horas_regla` y `horas_regla_rafaga` quedan en null. Nada más cambia aguas abajo.
 
 ## 5. resultado (rol C, lo consume rol D)
 Un registro por celda y día para todas las celdas de `celdas`, con o sin focos.
