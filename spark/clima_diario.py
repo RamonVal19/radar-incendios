@@ -30,11 +30,11 @@ from pyspark.sql import functions as F
 # ---------------------------------------------------------------------------
 # Rutas y parámetros (se cambian aquí para la ejecución final)
 # ---------------------------------------------------------------------------
-ENTRADA_CRUDO = "file:///opt/proyecto/data/raw/open-meteo/"          # carpeta de CSV de Open-Meteo
+ENTRADA_CRUDO = "hdfs://namenode:9000/raw/open-meteo/"          # carpeta de CSV de Open-Meteo
 MUESTRA_HORARIO = "file:///opt/proyecto/data/sample/clima_horario.csv"
 ESPERADO_DIARIO = "file:///opt/proyecto/data/sample/clima_diario.csv"  # solo para --muestra
-SALIDA_HORARIO = "hdfs://namenode:9000/prueba/clima_horario/"
-SALIDA_DIARIO = "hdfs://namenode:9000/prueba/clima_diario/"
+SALIDA_HORARIO = "hdfs://namenode:9000/clean/clima_horario/"
+SALIDA_DIARIO = "hdfs://namenode:9000/clean/clima_diario/"
 
 UMBRAL_TEMP = 30.0     # °C, la regla exige temp > 30
 UMBRAL_HR = 30.0       # %, la regla exige hr < 30
